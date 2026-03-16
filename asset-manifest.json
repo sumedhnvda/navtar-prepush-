@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/navtar-prepush-/static/css/main.5815691c.css",
-    "main.js": "/navtar-prepush-/static/js/main.fb2fde7f.js",
+    "main.js": "/navtar-prepush-/static/js/main.dbd6c046.js",
     "index.html": "/navtar-prepush-/index.html",
     "main.5815691c.css.map": "/navtar-prepush-/static/css/main.5815691c.css.map",
-    "main.fb2fde7f.js.map": "/navtar-prepush-/static/js/main.fb2fde7f.js.map"
+    "main.dbd6c046.js.map": "/navtar-prepush-/static/js/main.dbd6c046.js.map"
   },
   "entrypoints": [
     "static/css/main.5815691c.css",
-    "static/js/main.fb2fde7f.js"
+    "static/js/main.dbd6c046.js"
   ]
 }
