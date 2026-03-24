@@ -6,9 +6,22 @@ const ParticipantVideo = ({ participant }) => {
   const [minimize, setMinimize] = useState(false);
 
   useEffect(() => {
+    // Agora requires the DOM element to be fully mounted before calling .play()
+    // It's safer to use an ID or the raw element, and clean it up properly.
+    console.log(`[ParticipantVideo] Trying to render ${participant.name} (${participant.id})`);
+    
     if (participant.videoTrack && videoRef.current) {
+      console.log(`[ParticipantVideo] Playing video track for ${participant.id} onto `, videoRef.current);
       participant.videoTrack.play(videoRef.current);
+    } else {
+      console.warn(`[ParticipantVideo] Missing track or DOM ref for ${participant.id}`, { track: !!participant.videoTrack, ref: !!videoRef.current });
     }
+
+    return () => {
+      if (participant.videoTrack) {
+        participant.videoTrack.stop();
+      }
+    };
   }, [participant.videoTrack]);
 
   const handleClose = () => {

@@ -58,8 +58,30 @@ const ConferencePage = ({ user, room, onLeave }) => {
         const appId = process.env.REACT_APP_AGORA_APP_ID;
         if (!appId) throw new Error("REACT_APP_AGORA_APP_ID is not defined in environment variables");
 
-        // Join the channel with appId, room name, and null token (App ID only authentication)
-        await client.join(appId, room, null, null);
+        // Fetch token from Next.js backend
+        const backendUrl = process.env.REACT_APP_API_URL || "https://navtar-prepush.vercel.app";
+        let token = null;
+        let fetchedAppId = appId;
+        const uidToJoin = user?.uid || Math.floor(Math.random() * 100000); // Need a positive integer for token generation
+
+        try {
+          const res = await fetch(`${backendUrl}/api/agora/token?channelName=${room}&uid=${uidToJoin}`);
+          if (res.ok) {
+            const data = await res.json();
+            token = data.token;
+            if (data.appId) fetchedAppId = data.appId;
+            console.log("Successfully fetched token from backend:", { token: token ? "PRESENT" : "NULL", appId: fetchedAppId });
+          } else {
+            console.error("Failed to fetch Agora token", await res.text());
+          }
+        } catch (fetchErr) {
+          console.error("Error fetching Agora token:", fetchErr);
+        }
+
+        console.log("Joining Agora channel with params:", { appId: fetchedAppId, room, hasToken: !!token, uidToJoin });
+        // Join the channel with appId, room name, fetched token, and uid
+        const uid = await client.join(fetchedAppId, room, token, uidToJoin);
+        console.log("Successfully joined Agora channel!", uid);
 
         // Try to get local tracks, but don't crash if we are on HTTP or denied permissions
         try {

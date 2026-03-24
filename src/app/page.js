@@ -13,10 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Monitor } from "lucide-react";
 
 export default function LoginPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, authError } = useAuth();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -100,44 +98,11 @@ export default function LoginPage() {
               )}
             </Button>
             
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-slate-200" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-slate-500">Or continue with email</span>
-              </div>
-            </div>
-
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  placeholder="doctor@hospital.com" 
-                  required 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input 
-                  id="password" 
-                  type="password" 
-                  required 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              {error && (
-                 <p className="text-sm font-medium text-red-500 text-center">{error}</p>
-              )}
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" disabled={isSubmitting || isGoogleLoading}>
-                {isSubmitting ? "Signing in..." : "Sign in"}
-              </Button>
-            </form>
+            {(error || authError) && (
+               <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm font-medium text-red-600 text-center">
+                 {error || authError}
+               </div>
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-2">
